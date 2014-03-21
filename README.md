@@ -1,7 +1,9 @@
 meteor-custom-accounts-forms
 ============================
 
-MeteorJS &amp; Bootstrap 3: Custom sign in/sign up forms
+###### MeteorJS &amp; Bootstrap 3: Custom sign in/sign up forms
+
+Go and see live demo at [mmotel.kd.io:3000](http://mmotel.kd.io:3000/). To see demo click on `Click to continue: mmotel.kd.io:3000`.
 
 ### Dependencies
 
