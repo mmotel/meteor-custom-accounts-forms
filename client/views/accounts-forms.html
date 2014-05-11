@@ -17,7 +17,7 @@
     </div>
     <div class="panel-body">
       <form id="loginForm">
-        <div class="alert alert-danger" id="loginError">Email address or password is incorrect.</div>
+        <div class="alert alert-danger" id="login-error">Email address or password is incorrect.</div>
         <div class="form-group">
           <input type="text" id="login-email" class="form-control" placeholder="Email">
         </div>
@@ -25,7 +25,7 @@
           <input type="password" id="login-password" class="form-control" placeholder="Password">
         </div>
         <div class="form-group">
-          <button type="submit" class="btn btn-primary btn-md btn-block">Sign in with password</button>
+          <button type="submit" class="btn btn-primary btn-md btn-block" id="login-btn">Sign in with password</button>
         </div>
       </form>
     </div>
@@ -46,17 +46,17 @@
         <div class="form-group">
           <input type="text" id="signin-email" class="form-control" placeholder="Email">
         </div>
-        <div class="alert alert-danger" id="signinEmailError">Email address is not valid.</div>
+        <div class="alert alert-danger" id="signin-email-error">Email address is not valid.</div>
         <div class="form-group">
           <input type="password" id="signin-password" class="form-control" placeholder="Password">
         </div>
-        <div class="alert alert-danger" id="signinPasswordError">Minimum password size is 6.</div>
+        <div class="alert alert-danger" id="signin-password-error">Minimum password size is 8. Password should contain one capital letter and one digit.</div>
         <div class="form-group">
           <input type="password" id="signin-password-repeat" class="form-control" placeholder="Repeat password">
         </div>
-        <div class="alert alert-danger" id="signinPasswordRepeatError">Passwords do not match.</div>
+        <div class="alert alert-danger" id="signin-password-repeat-error">Passwords do not match.</div>
         <div class="form-group">
-          <button type="submit" class="btn btn-success btn-md btn-block">Create account</button>
+          <button type="submit" class="btn btn-success btn-md btn-block" id="create-acconut-btn">Create account</button>
         </div>
       </form>
     </div>

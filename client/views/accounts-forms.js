@@ -1,11 +1,95 @@
-var validateEmail = function (email) { 
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
+var onValid = function () {
+  $(this).parent().removeClass('has-error');
+  $(this).parent().addClass('has-success'); 
+}
+
+var onNotValid = function ( errType ) {
+  if(errType.empty){ return; }
+  $(this).parent().addClass('has-error');
+}
+
+var validLoginForm = function () { 
+  $().valid("form", {
+    "fields": 
+      [
+        { "field": "#login-email", "type": "email", "options": { "onValid": onValid, "onNotValid": onNotValid } },
+        { "field": "#login-password", "type": "password", "options":             
+          {"size": { "min": 8, "max": 32 }, "content": { "small": true, "big": true, "digit": true, "special": false }, 
+            "onValid": onValid, "onNotValid": onNotValid } 
+        }
+      ],
+      "onFormValid": function () {
+        $('#login-btn').removeAttr("disabled");
+        // console.log("valid");
+      },
+      "onFormNotValid": function () {
+        $('#login-btn').attr("disabled", "disabled");
+        // console.log("not valid");
+      }
+  });
+
+}
+
+var onValid2 = function () {
+  $(this).parent().removeClass('has-error');
+  $(this).parent().addClass('has-success');
+  $( '#' + $(this).attr('id') + '-error').slideUp(); 
+}
+
+var onNotValid2 = function ( errType ) {
+  if(errType.empty){ return; }
+  $(this).parent().addClass('has-error');
+  $( '#' + $(this).attr('id') + '-error').slideDown();
+}
+
+var validCreateAccountForm = function () { 
+  $().valid("form", {
+    "fields": 
+      [
+        { "field": "#signin-email", "type": "email", "options": "onValid": onValid2, "onNotValid": onNotValid2 } },
+        { 
+          "field": "#signin-password", "type": "password","options": 
+            { "size": { "min": 8, "max": 32 }, "content": { "small": true, "big": true, "digit": true, "special": false }, 
+            "onValid": onValid2, "onNotValid": onNotValid2 } 
+        },
+        { 
+          "field": "#signin-password-repeat", "type": "password", "options": 
+            { "size": { "min": 8, "max": 32 }, "content": { "small": true, "big": true, "digit": true, "special": false }, 
+            "onValid": function () {
+              if( $('#signin-password').val() === $('#signin-password-repeat').val() ){
+                onValid2.call(this);
+              }
+              else {
+                onNotValid2.call(this, {});
+              }
+            }, 
+            "onNotValid": onNotValid2 
+          } 
+        }
+      ],
+      "onFormValid": function () {
+        if( $('#signin-password').val() === $('#signin-password-repeat').val() ){
+          onValid2.call($('#signin-password-repeat'));
+          $('#create-acconut-btn').removeAttr("disabled");
+        }
+        else {
+          onNotValid2.call($('#signin-password-repeat'), {});
+          $('#create-acconut-btn').attr("disabled", "disabled");
+        }        
+        console.log("valid");
+      },
+      "onFormNotValid": function () {
+        $('#create-acconut-btn').attr("disabled", "disabled");
+        console.log("not valid");
+      }
+  });
+
 }
 
 
 Template.loginForm.rendered = function () {
-  $("#loginError").hide();
+  $("#login-error").hide();
+  validLoginForm();
 }
 
 Template.loginForm.events({
@@ -14,53 +98,34 @@ Template.loginForm.events({
     var email = template.find("#login-email").value;
     var password = template.find("#login-password").value;
 
-    if( validateEmail(email) && password.length >= 6 ) {
-
-      Meteor.loginWithPassword(
-        email,
-        password,
-        function(error) {
-          if (error) {
-            $("#login-email").parent().addClass('has-error');
-            $("#login-password").parent().addClass('has-error');
-            $('#loginError').slideDown();
-          } else {
-            $("#login-email").parent().removeClass('has-error');
-            $("#login-email").parent().removeClass('has-success');
-            $("#login-password").parent().removeClass('has-error');
-            $("#login-password").parent().removeClass('has-success');
-            $("#loginError").slideUp();
-          }
+    Meteor.loginWithPassword(
+      email,
+      password,
+      function(error) {
+        if (error) {
+          $("#login-email").parent().addClass('has-error');
+          $("#login-password").parent().addClass('has-error');
+          $('#login-error').slideDown();
+          validLoginForm();
+        } else {
+          $("#login-email").parent().removeClass('has-error');
+          $("#login-email").parent().removeClass('has-success');
+          $("#login-password").parent().removeClass('has-error');
+          $("#login-password").parent().removeClass('has-success');
+          $("#login-error").slideUp();
         }
-      );
-
-    } else {
-      $('#loginError').slideDown();
-    }
+      }
+    );
   },
   'click #showCreateAccountFormBtn': function () {
     Session.set('LOGINshowCreateAccountForm', true);
   },
   //validation
   'keyup #login-email': function (event, template) {
-    var email = template.find('#login-email').value;
-    if( !(validateEmail(email)) ){
-      $("#login-email").parent().addClass('has-error');
-    } 
-    else {
-      $("#login-email").parent().removeClass('has-error');
-      $("#login-email").parent().addClass('has-success'); 
-    }
+    validLoginForm();
   },
   'keyup #login-password': function (event, template) {
-    var password = template.find('#login-password').value;
-    if(! (password.length >= 6) ) {
-      $("#login-password").parent().addClass('has-error');
-    } 
-    else {
-      $("#login-password").parent().removeClass('has-error');
-      $("#login-password").parent().addClass('has-success'); 
-    }
+    validLoginForm();
   }
   //---
 });
@@ -70,55 +135,26 @@ Template.loginForm.show = function () {
 }
 
 Template.createAccountForm.rendered = function () {
-  $('#signinEmailError').hide();
-  $('#signinPasswordError').hide();
-  $('#signinPasswordRepeatError').hide();
+  $('#signin-email-error').hide();
+  $('#signin-password-error').hide();
+  $('#signin-password-repeat-error').hide();
+  validCreateAccountForm();
 }
 
 Template.createAccountForm.events({
   'click #showLoginFormBtn': function () {
       Session.set('LOGINshowCreateAccountForm', false);
-      Session.set('SIGNINemailError', false);
-      Session.set('SIGNINpasswordError', false);
-      Session.set('SIGNINpasswordRepeatError', false);
   },
   //validation
   'keyup #signin-email': function (event, template) {
     var email = template.find('#signin-email').value;
-    if( !(validateEmail(email)) ) {
-      $("#signin-email").parent().addClass('has-error');
-      $('#signinEmailError').slideDown();
-    } 
-    else {
-      $("#signin-email").parent().removeClass('has-error');
-      $("#signin-email").parent().addClass('has-success');  
-      $('#signinEmailError').slideUp();
-    }
+    validCreateAccountForm();
   },
   'keyup #signin-password': function (event, template) {
-    var password = template.find('#signin-password').value;
-    if(! (password.length >= 6) ) {
-      $("#signin-password").parent().addClass('has-error');
-      $('#signinPasswordError').slideDown();
-    } 
-    else {
-      $("#signin-password").parent().removeClass('has-error');
-      $("#signin-password").parent().addClass('has-success'); 
-      $('#signinPasswordError').slideUp();
-    }
+    validCreateAccountForm();
   },
   'keyup #signin-password-repeat': function (event, template) {
-    var password = template.find('#signin-password').value;
-    var repeatPassword = template.find('#signin-password-repeat').value;
-    if( password !== repeatPassword ) {
-      $("#signin-password-repeat").parent().addClass('has-error');
-      $('#signinPasswordRepeatError').slideDown();
-    } 
-    else {
-      $("#signin-password-repeat").parent().removeClass('has-error');
-      $("#signin-password-repeat").parent().addClass('has-success'); 
-      $('#signinPasswordRepeatError').slideUp();
-    }
+    validCreateAccountForm();
   },
   //---
   'submit #createAccountForm': function (event, template) {
@@ -127,23 +163,21 @@ Template.createAccountForm.events({
     var password = template.find('#signin-password').value;
     var repeatPassword = template.find('#signin-password-repeat').value;
 
-    if( validateEmail(email) && password === repeatPassword && password.length >= 6 && repeatPassword.length >= 6 ){
-      Accounts.createUser(
-        {
-          "email": email,
-          "password": password,
-          "profile": {
-            "name": email
-          }
-        },
-        function(error) {
-          if (error) {
-          } else {
-            Session.set('LOGINshowCreateAccountForm', false);
-          }
+    Accounts.createUser(
+      {
+        "email": email,
+        "password": password,
+        "profile": {
+          "name": email
         }
-      );    
-    }
+      },
+      function(error) {
+        if (error) {
+        } else {
+          Session.set('LOGINshowCreateAccountForm', false);
+        }
+      }
+    );    
 
   }
 });
