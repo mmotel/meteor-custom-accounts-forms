@@ -46,7 +46,7 @@ var validCreateAccountForm = function () {
   $().valid("form", {
     "fields": 
       [
-        { "field": "#signin-email", "type": "email", "options": "onValid": onValid2, "onNotValid": onNotValid2 } },
+        { "field": "#signin-email", "type": "email", "options": { "onValid": onValid2, "onNotValid": onNotValid2 } },
         { 
           "field": "#signin-password", "type": "password","options": 
             { "size": { "min": 8, "max": 32 }, "content": { "small": true, "big": true, "digit": true, "special": false }, 
