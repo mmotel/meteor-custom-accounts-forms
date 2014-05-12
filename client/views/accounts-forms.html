@@ -8,8 +8,8 @@
 </template>
 
 <template name="loginForm">
-  {{#if show}}
-  <div class="panel panel-default">
+  <!-- {{#if show}} -->
+  <div class="panel panel-default" id="loginFormBox">
     <div class="panel-heading">
       <h3 class="panel-title">Sign in or 
         <button type="button" id="showCreateAccountFormBtn" class="btn btn-md btn-link">create account</button>
@@ -17,7 +17,7 @@
     </div>
     <div class="panel-body">
       <form id="loginForm">
-        <div class="alert alert-danger" id="login-error">Email address or password is incorrect.</div>
+        <div class="alert alert-danger myHidder" id="login-error">Email address or password is incorrect.</div>
         <div class="form-group">
           <input type="text" id="login-email" class="form-control" placeholder="Email">
         </div>
@@ -30,12 +30,12 @@
       </form>
     </div>
   </div>
-  {{/if}}
+  <!-- {{/if}} -->
 </template>
 
 <template name="createAccountForm">
-  {{#if show}}
-  <div class="panel panel-default">
+  <!-- {{#if show}} -->
+  <div class="panel panel-default myHidder" id="createAccountFormBox">
     <div class="panel-heading">
       <h3 class="panel-title">Create account or 
         <button type="button" id="showLoginFormBtn" class="btn btn-md btn-link">sign in</button>
@@ -46,22 +46,22 @@
         <div class="form-group">
           <input type="text" id="signin-email" class="form-control" placeholder="Email">
         </div>
-        <div class="alert alert-danger" id="signin-email-error">Email address is not valid.</div>
+        <div class="alert alert-danger myHidder" id="signin-email-error">Email address is not valid.</div>
         <div class="form-group">
           <input type="password" id="signin-password" class="form-control" placeholder="Password">
         </div>
-        <div class="alert alert-danger" id="signin-password-error">Minimum password size is 8. Password should contain one capital letter and one digit.</div>
+        <div class="alert alert-danger myHidder" id="signin-password-error">Minimum password size is 8. Password should contain one capital letter and one digit.</div>
         <div class="form-group">
           <input type="password" id="signin-password-repeat" class="form-control" placeholder="Repeat password">
         </div>
-        <div class="alert alert-danger" id="signin-password-repeat-error">Passwords do not match.</div>
+        <div class="alert alert-danger myHidder" id="signin-password-repeat-error">Passwords do not match.</div>
         <div class="form-group">
           <button type="submit" class="btn btn-success btn-md btn-block" id="create-acconut-btn">Create account</button>
         </div>
       </form>
     </div>
   </div>
-  {{/if}}
+  <!-- {{/if}} -->
 </template>
 
 <template name="accountPanel">

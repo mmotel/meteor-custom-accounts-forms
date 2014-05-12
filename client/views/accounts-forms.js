@@ -46,7 +46,7 @@ var validCreateAccountForm = function () {
   $().valid("form", {
     "fields": 
       [
-        { "field": "#signin-email", "type": "email", "options": "onValid": onValid2, "onNotValid": onNotValid2 } },
+        { "field": "#signin-email", "type": "email", "options": { "onValid": onValid2, "onNotValid": onNotValid2 } },
         { 
           "field": "#signin-password", "type": "password","options": 
             { "size": { "min": 8, "max": 32 }, "content": { "small": true, "big": true, "digit": true, "special": false }, 
@@ -118,42 +118,39 @@ Template.loginForm.events({
     );
   },
   'click #showCreateAccountFormBtn': function () {
-    Session.set('LOGINshowCreateAccountForm', true);
+    $('#loginFormBox').hide();
+    $('#createAccountFormBox').show();
+    validCreateAccountForm();
   },
   //validation
-  'keyup #login-email': function (event, template) {
+  'keyup #login-email, blur #login-email': function (event, template) {
     validLoginForm();
   },
-  'keyup #login-password': function (event, template) {
+  'keyup #login-password, blur #login-password': function (event, template) {
     validLoginForm();
   }
   //---
 });
 
-Template.loginForm.show = function () {
-  return !( Session.get('LOGINshowCreateAccountForm') );
-}
-
 Template.createAccountForm.rendered = function () {
-  $('#signin-email-error').hide();
-  $('#signin-password-error').hide();
-  $('#signin-password-repeat-error').hide();
   validCreateAccountForm();
 }
 
 Template.createAccountForm.events({
   'click #showLoginFormBtn': function () {
-      Session.set('LOGINshowCreateAccountForm', false);
+      $('#createAccountFormBox').hide();
+      $('#loginFormBox').show();
+      validLoginForm();
   },
   //validation
-  'keyup #signin-email': function (event, template) {
+  'keyup #signin-email, blur #signin-email': function (event, template) {
     var email = template.find('#signin-email').value;
     validCreateAccountForm();
   },
-  'keyup #signin-password': function (event, template) {
+  'keyup #signin-password, blur #signin-password': function (event, template) {
     validCreateAccountForm();
   },
-  'keyup #signin-password-repeat': function (event, template) {
+  'keyup #signin-password-repeat, blur #signin-password-repeat': function (event, template) {
     validCreateAccountForm();
   },
   //---
@@ -174,17 +171,14 @@ Template.createAccountForm.events({
       function(error) {
         if (error) {
         } else {
-          Session.set('LOGINshowCreateAccountForm', false);
+          $('#createAccountFormBox').hide();
+          $('#loginFormBox').show();
         }
       }
     );    
 
   }
 });
-
-Template.createAccountForm.show = function () {
-  return Session.get('LOGINshowCreateAccountForm');
-}
 
 Template.accountPanel.events({
   'click #logoutBtn': function () {
@@ -193,7 +187,8 @@ Template.accountPanel.events({
           // Display the logout error to the user however you want
       }
       else {
-        Session.set('LOGINshowCreateAccountForm', false);
+        $('#createAccountFormBox').hide();
+        $('#loginFormBox').show();
       }
     });
   }
